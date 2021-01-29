@@ -1,0 +1,8 @@
+__pycache__/
+.vscode
+.ipynb_checkpoints
+wandb/
+google-quest-challenge-kaggle/
+*.onnx
+models/
+src/extra.py
