@@ -40,11 +40,11 @@ class qDataset(torch.utils.data.Dataset):
             'target' : torch.tensor(self.target[idx], dtype=torch.float)
         }
     
-def return_dl(df, split, config_dict=config_dict):
+def return_dl(df, split, target_cols, config_dict=config_dict):
     qtitle = df.loc[:,'question_title'].values
     qbody = df.loc[:,'question_body'].values
     answer = df.loc[:,'answer'].values
-    target = df.iloc[:,10:].values
+    target = df.loc[:,target_cols].values
 
     ds = qDataset(qtitle, qbody, answer, target)
 
@@ -56,10 +56,29 @@ def return_dl(df, split, config_dict=config_dict):
         drop_last=True,
     )
 
-def get_dataloaders(path_dict=path_dict, config_dict=config_dict):
-    data = pd.read_csv(path_dict["TRAIN_PATH"], index_col='qa_id')
-    df_train, df_valid = train_test_split(data, random_state=42, test_size=0.1)
-    return return_dl(df_train, "train", config_dict=config_dict), return_dl(df_valid, "valid",config_dict=config_dict)
-        
+def get_dataloaders(fold, target_cols=target_columns, path_dict=path_dict, config_dict=config_dict):
+    data = pd.read_csv(path_dict["TRAIN_PATH"]).fillna("none")
+    
+    df_train = data.loc[data['fold']!=fold]
+    df_valid = data.loc[data['fold']==fold]
+    
+    return return_dl(df_train, "train", target_cols=target_cols, config_dict=config_dict), return_dl(df_valid, "valid", target_cols=target_cols, config_dict=config_dict)
+
+target_columns = ['question_asker_intent_understanding', 'question_body_critical',
+       'question_conversational', 'question_expect_short_answer',
+       'question_fact_seeking', 'question_has_commonly_accepted_answer',
+       'question_interestingness_others', 'question_interestingness_self',
+       'question_multi_intent', 'question_not_really_a_question',
+       'question_opinion_seeking', 'question_type_choice',
+       'question_type_compare', 'question_type_consequence',
+       'question_type_definition', 'question_type_entity',
+       'question_type_instructions', 'question_type_procedure',
+       'question_type_reason_explanation', 'question_type_spelling',
+       'question_well_written', 'answer_helpful',
+       'answer_level_of_information', 'answer_plausible', 'answer_relevance',
+       'answer_satisfaction', 'answer_type_instructions',
+       'answer_type_procedure', 'answer_type_reason_explanation',
+       'answer_well_written']
+
 if __name__ == "__main__":
-    train_dl ,valid_dl = get_dataloaders()    
+    train_dl ,valid_dl = get_dataloaders(0, target_columns)

@@ -6,8 +6,8 @@ path_dict = {
 "ROOT_DIR" : Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 }
 
-path_dict["TRAIN_PATH"] = path_dict["ROOT_DIR"]/'inputs'/'train.csv'
-path_dict["TEST_PATH"] = path_dict["ROOT_DIR"]/'inputs'/'test.csv'
+path_dict["TRAIN_PATH"] = path_dict["ROOT_DIR"]/'input'/'train_with_GKF.csv'
+path_dict["TEST_PATH"] = path_dict["ROOT_DIR"]/'input'/'test.csv'
 path_dict["BERT_PATH"] = 'bert-base-uncased'
 path_dict["TOKENIZER_PATH"] = 'bert-base-uncased'
 path_dict["MODEL_FILENAME"] = 'models/some_model325.onnx'

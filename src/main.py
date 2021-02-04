@@ -7,9 +7,11 @@ from transformers import AdamW , get_linear_schedule_with_warmup
 import wandb
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+from pytorch_lightning.callbacks import Callback
 
 from quest_dataset import get_dataloaders
 from CONFIG import path_dict, config_dict
+from scipy.stats import spearmanr
 
 global path_dict
 
@@ -21,11 +23,13 @@ class Model(pl.LightningModule):
         self.linear = nn.Linear(768,30)
 
         self.save_hyperparameters(config_dict)
-        if self.hparams['freeze_bert']:
-            for p in self.bert.parameters():
-                p.requires_grad = False
+        self.toggle_freeze_bert_to(self.hparams['freeze_bert'])
         self.lr = self.hparams['lr']
 
+    def toggle_freeze_bert_to(self, freeze_bert):
+        for p in self.bert.parameters():
+            p.requires_grad = freeze_bert
+    
     @staticmethod
     def loss(logits, targets):
         return nn.BCEWithLogitsLoss()(logits, targets)
@@ -51,7 +55,7 @@ class Model(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         logits, loss = self.shared_step(batch)
         self.log('valid_loss', loss, on_step=True, on_epoch=True, prog_bar=False, logger=True)
-        return {"valid_loss":loss ,"logits":logits}
+        return {"valid_loss":loss ,"logits":logits, "true_preds":batch['target']}
 
     def configure_optimizers(self):
         return AdamW(self.parameters(), self.lr)
@@ -74,19 +78,35 @@ class Model(pl.LightningModule):
                 {"valid/logits": wandb.Histogram(flattened_logits.to("cpu")),
                 "global_step": self.global_step},
                 commit=False
-                )
-
+            )
+        y_pred = torch.sigmoid(torch.cat(validation_step_outputs['logits'])).to('cpu').detach().numpy()
+        y_true = torch.cat(validation_step_outputs['true_preds']).to('cpu').detach().numpy()
+        
+        spearman_corr = self.spearman_metric(y_true, y_pred)
+        self.log("val_spearman", spearman_corr, logger=True)
+            
+    @staticmethod            
+    def spearman_metric(y_true, y_pred, return_scores=False):
+        corr = [
+            spearmanr(pred_col, target_col).correlation
+            for pred_col, target_col in zip(y_pred.T, y_true.T)
+        ]
+        if return_scores:
+            return corr
+        else:
+            return np.nanmean(corr)    
+    
 if __name__ == "__main__":
 
     model = Model(config_dict=config_dict)
-    train_dl, valid_dl = get_dataloaders(config_dict=model.hparams)
+    train_dl, valid_dl = get_dataloaders(fold=0,config_dict=model.hparams)
 
     wandb_logger = WandbLogger(project=model.hparams["wandbProjectName"])
     
     early_stop_callback = EarlyStopping(
             monitor='valid_loss',
             min_delta=0.00,
-            patience=5,
+            patience=3,
             verbose=False,
             mode='min'
         )

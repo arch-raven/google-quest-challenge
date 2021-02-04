@@ -6,9 +6,9 @@ The google-quest-challenge is an NLP competition that was hosted on Kaggle.
 kaggle competitions download -c google-quest-challenge
 ```
 
- ### Things to try
+ ### Things to try in priority order
 
- - [ ] Stable cross validation eg. GroupKFold with question_title group
+ - [x] Stable cross validation split, used GroupKFold with question_title group
  - [ ] Separate learning rate 3-e5 for transformers 0.005 for heads with cosine schedule
     - [ ] Freeze the transformer layer and train head for 1 epoch
     - [ ] train transformer layer and header layer for different learning rate
