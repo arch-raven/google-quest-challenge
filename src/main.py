@@ -24,13 +24,13 @@ class Model(pl.LightningModule):
         self.bert_dropout = nn.Dropout(config_dict["bert_dropout"])
         self.linear = nn.Linear(768, 30)
 
-        self.save_hyperparameters(config_dict, kwargs)
-        self.toggle_freeze_bert_to(self.hparams["freeze_bert"])
+        self.save_hyperparameters(config_dict)
+        self.toggle_train_bert_to(self.hparams["train_bert"])
         self.lr = self.hparams["lr"]
 
-    def toggle_freeze_bert_to(self, freeze_bert):
+    def toggle_train_bert_to(self, train_bert):
         for p in self.bert.parameters():
-            p.requires_grad = freeze_bert
+            p.requires_grad = train_bert
 
     @staticmethod
     def loss(logits, targets):
@@ -83,8 +83,8 @@ class Model(pl.LightningModule):
     def validation_epoch_end(
         self, validation_step_outputs
     ):  # args are defined as part of pl API
-        if self.hparams["save_model_bin"]:
-            torch.save(model.state_dict(), self.hparams["MODEL_FILENAME"] + ".bin")
+        # if self.hparams["save_model_bin"]:
+        #     torch.save(self.state_dict(), self.hparams["MODEL_FILENAME"] + ".pt")
 
         if self.hparams["save_model_onnx"]:
             dummy_inputs = self.get_dummy_inputs()
@@ -105,7 +105,7 @@ class Model(pl.LightningModule):
 
         if self.hparams["wandb_log_logits"]:
             flattened_logits = torch.sigmoid(
-                torch.cat(validation_step_outputs["logits"])
+                torch.cat([out['logits'] for out in validation_step_outputs])
             )
             self.logger.experiment.log(
                 {
@@ -115,13 +115,13 @@ class Model(pl.LightningModule):
                 commit=False,
             )
         y_pred = (
-            torch.sigmoid(torch.cat(validation_step_outputs["logits"]))
+            torch.sigmoid(torch.cat([out['logits'] for out in validation_step_outputs]))
             .to("cpu")
             .detach()
             .numpy()
         )
         y_true = (
-            torch.cat(validation_step_outputs["true_preds"]).to("cpu").detach().numpy()
+            torch.cat([out['true_preds'] for out in validation_step_outputs]).to("cpu").detach().numpy()
         )
 
         spearman_corr = self.spearman_metric(y_true, y_pred)
@@ -139,16 +139,14 @@ class Model(pl.LightningModule):
             return np.nanmean(corr)
 
 
-if __name__ == "__main__":
-    FOLD = 0
-
+def main(FOLD):
     model = Model(config_dict=config_dict, fold=FOLD)
     train_dl, valid_dl = get_dataloaders(fold=FOLD, config_dict=model.hparams)
 
-    wandb_logger = WandbLogger(project=model.hparams["wandbProjectName"])
+    wandb_logger = WandbLogger(project=model.hparams["wandbProjectName"], group=FOLD)
 
     early_stop_callback = EarlyStopping(
-        monitor="valid_loss", min_delta=0.00, patience=3, verbose=False, mode="min"
+        monitor="val_spearman", min_delta=0.0000, patience=3, verbose=False, mode="max"
     )
 
     checkpoint_callback = ModelCheckpoint(
@@ -171,3 +169,10 @@ if __name__ == "__main__":
     )
 
     trainer.fit(model, train_dl, valid_dl)
+    wandb.finish()
+
+if __name__ == "__main__":
+    for f in range(5):
+        main(f)
+
+    

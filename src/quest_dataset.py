@@ -1,7 +1,6 @@
 import pandas as pd
 import torch
 import transformers
-from sklearn.model_selection import train_test_split
 from CONFIG import path_dict, config_dict
 
 
@@ -68,21 +67,6 @@ def return_dl(df, split, target_cols, config_dict=config_dict):
         drop_last=True,
     )
 
-
-def get_dataloaders(
-    fold, target_cols=target_columns, path_dict=path_dict, config_dict=config_dict
-):
-    data = pd.read_csv(path_dict["TRAIN_PATH"]).fillna("none")
-
-    df_train = data.loc[data["fold"] != fold]
-    df_valid = data.loc[data["fold"] == fold]
-
-    return (
-        return_dl(df_train, "train", target_cols=target_cols, config_dict=config_dict),
-        return_dl(df_valid, "valid", target_cols=target_cols, config_dict=config_dict),
-    )
-
-
 target_columns = [
     "question_asker_intent_understanding",
     "question_body_critical",
@@ -115,6 +99,18 @@ target_columns = [
     "answer_type_reason_explanation",
     "answer_well_written",
 ]
+def get_dataloaders(
+    fold, target_cols=target_columns, path_dict=path_dict, config_dict=config_dict
+):
+    data = pd.read_csv(path_dict["TRAIN_PATH"]).fillna("none")
+
+    df_train = data.loc[data["fold"] != fold]
+    df_valid = data.loc[data["fold"] == fold]
+
+    return (
+        return_dl(df_train, "train", target_cols=target_cols, config_dict=config_dict),
+        return_dl(df_valid, "valid", target_cols=target_cols, config_dict=config_dict),
+    )
 
 if __name__ == "__main__":
     train_dl, valid_dl = get_dataloaders(0, target_columns)
