@@ -3,19 +3,18 @@ import torch
 import torch.nn as nn
 import pytorch_lightning as pl
 import transformers
-from transformers import AdamW, get_linear_schedule_with_warmup
+from transformers import AdamW, get_cosine_schedule_with_warmup
 import wandb
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.callbacks import Callback
 
 from quest_dataset import get_dataloaders
 from CONFIG import path_dict, config_dict
 from scipy.stats import spearmanr
+from argparse import ArgumentParser
 
-global path_dict
-
+global path_dict, FOLD
 
 class Model(pl.LightningModule):
     def __init__(self, path_dict=path_dict, config_dict=config_dict, **kwargs):
@@ -25,12 +24,11 @@ class Model(pl.LightningModule):
         self.linear = nn.Linear(768, 30)
 
         self.save_hyperparameters(config_dict)
-        self.toggle_train_bert_to(self.hparams["train_bert"])
-        self.lr = self.hparams["lr"]
+        # self.toggle_train_bert_to(self.hparams["train_bert"])
 
-    def toggle_train_bert_to(self, train_bert):
-        for p in self.bert.parameters():
-            p.requires_grad = train_bert
+    # def toggle_train_bert_to(self, train_bert):
+    #     for p in self.bert.parameters():
+    #         p.requires_grad = train_bert
 
     @staticmethod
     def loss(logits, targets):
@@ -71,7 +69,15 @@ class Model(pl.LightningModule):
         return {"valid_loss": loss, "logits": logits, "true_preds": batch["target"]}
 
     def configure_optimizers(self):
-        return AdamW(self.parameters(), self.lr)
+        grouped_parameters = [
+            {"params":self.bert.parameters(), "lr":self.hparams.bert_lr},
+            {"params":self.linear.parameters(), "lr":self.hparams.linear_lr}
+        ]
+        optim = AdamW(grouped_parameters, lr=self.hparams.bert_lr)
+        num_training_steps = 304*self.hparams.max_epochs                                                                                      ##change this, hardcoded rn
+        sched = get_cosine_schedule_with_warmup(optim, num_warmup_steps=0, num_training_steps=num_training_steps)
+        
+        return [optim] , [sched]
 
     def get_dummy_inputs(self):
         return (
@@ -139,11 +145,22 @@ class Model(pl.LightningModule):
             return np.nanmean(corr)
 
 
-def main(FOLD):
-    model = Model(config_dict=config_dict, fold=FOLD)
-    train_dl, valid_dl = get_dataloaders(fold=FOLD, config_dict=model.hparams)
+def main():
+    pl.seed_everything(42)
+    
+    parser = ArgumentParser()
+    parser.add_argument("--fold", type=int, choices=[0,1,2,3,4])
+    args = parser.parse_args()
+    FOLD = args.fold
+    
+    path_dict["MODEL_FILENAME"] = f"models/free-log-fire-onFold{args.fold}"
+    path_dict["MODEL_PATH"] = path_dict["ROOT_DIR"] / path_dict["MODEL_FILENAME"]
+    config_dict["MODEL_FILENAME"] = path_dict["MODEL_FILENAME"]
+    
+    model = Model(config_dict=config_dict, fold=args.fold)
+    train_dl, valid_dl = get_dataloaders(fold=args.fold, config_dict=model.hparams)
 
-    wandb_logger = WandbLogger(project=model.hparams["wandbProjectName"], group=FOLD)
+    wandb_logger = WandbLogger(project="google-quest-challenge-kaggle", group=str(args.fold))
 
     early_stop_callback = EarlyStopping(
         monitor="val_spearman", min_delta=0.0000, patience=3, verbose=False, mode="max"
@@ -154,6 +171,17 @@ def main(FOLD):
         filename="quest-{epoch:02d}-{FOLD}",
     )
 
+    class ToggleBertTraining(pl.Callback):
+        def on_train_epoch_start(self, trainer, pl_module):
+            if trainer.current_epoch == 0:
+                print(f"current_epoch is: {trainer.current_epoch} and freezing BERT layer's parameters")
+                for p in pl_module.bert.parameters():
+                    p.requires_grad = False
+            else:
+                print(f"current_epoch is: {trainer.current_epoch} and unfreezing BERT layer's parameters for training")
+                for p in pl_module.bert.parameters():
+                    p.requires_grad = True
+                
     trainer = pl.Trainer(
         logger=wandb_logger,
         gpus=model.hparams["gpus"],
@@ -165,14 +193,13 @@ def main(FOLD):
         callbacks=[
             early_stop_callback,
             checkpoint_callback,
+            ToggleBertTraining(),
         ],
     )
 
     trainer.fit(model, train_dl, valid_dl)
-    wandb.finish()
 
 if __name__ == "__main__":
-    for f in range(5):
-        main(f)
+    main()
 
     

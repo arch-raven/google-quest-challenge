@@ -100,7 +100,7 @@ target_columns = [
     "answer_well_written",
 ]
 def get_dataloaders(
-    fold, target_cols=target_columns, path_dict=path_dict, config_dict=config_dict
+    fold=0, target_cols=target_columns, path_dict=path_dict, config_dict=config_dict
 ):
     data = pd.read_csv(path_dict["TRAIN_PATH"]).fillna("none")
 
@@ -113,4 +113,4 @@ def get_dataloaders(
     )
 
 if __name__ == "__main__":
-    train_dl, valid_dl = get_dataloaders(0, target_columns)
+    train_dl, valid_dl = get_dataloaders(fold=0, target_cols=target_columns)
