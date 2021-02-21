@@ -16,7 +16,7 @@ config_dict = {
     "loss_criterion": "nn.BCEWithLogitsLoss",
     "wandbLog": True,
     "wandb_log_logits": False,
-    "gpus": '1',
+    "gpus": 1,
     "auto_select_gpus": False,
     "train_bert": True,
     "maxlen": 512,
