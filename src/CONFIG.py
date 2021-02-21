@@ -25,7 +25,7 @@ config_dict = {
     "bert_dropout": 0.3,
     "bert_output_used": "maxpooled",
     "batch_size": 4,
-    "max_epochs": 1,
+    "max_epochs": 4,
     "save_model_bin": False,
     "save_model_onnx": False,
     "wandb_save_model": False,

@@ -5,9 +5,9 @@ module load cuda
 module load anaconda/3
 source activate torchenv
 cd google-quest-challenge/
-python src/main.py 0
-python src/main.py 1
-python src/main.py 2
-python src/main.py 3
-python src/main.py 4
+python src/main.py --fold 0
+python src/main.py --fold 1
+python src/main.py --fold 2
+python src/main.py --fold 3
+python src/main.py --fold 4
 source deactivate
