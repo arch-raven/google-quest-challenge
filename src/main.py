@@ -24,11 +24,6 @@ class Model(pl.LightningModule):
         self.linear = nn.Linear(768, 30)
 
         self.save_hyperparameters(config_dict)
-        # self.toggle_train_bert_to(self.hparams["train_bert"])
-
-    # def toggle_train_bert_to(self, train_bert):
-    #     for p in self.bert.parameters():
-    #         p.requires_grad = train_bert
 
     @staticmethod
     def loss(logits, targets):
