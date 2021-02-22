@@ -10,6 +10,7 @@ import pytorch_lightning as pl
 
 ROOT_DIR = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+
 class qDataset(torch.utils.data.Dataset):
     def __init__(
         self,
@@ -90,22 +91,21 @@ target_columns = [
 
 
 class QuestData(pl.LightningDataModule):
-    
     def __init__(self, args, target_cols=target_columns):
         super().__init__()
         self.hparams = args
         self.target_cols = target_cols
-    
+
     def train_dataloader(self):
         df = pd.read_csv(ROOT_DIR / "input" / "train_with_GKF.csv").fillna("none")
         df = df.loc[df["fold"] != self.hparams.fold]
-        
+
         qtitle = df.loc[:, "question_title"].values
         qbody = df.loc[:, "question_body"].values
         answer = df.loc[:, "answer"].values
         target = df.loc[:, self.target_cols].values
 
-        ds = qDataset(self.hparams ,qtitle, qbody, answer, target)
+        ds = qDataset(self.hparams, qtitle, qbody, answer, target)
 
         return torch.utils.data.DataLoader(
             ds,
@@ -114,61 +114,71 @@ class QuestData(pl.LightningDataModule):
             num_workers=8,
             drop_last=True,
         )
-    
+
     def val_dataloader(self):
         df = pd.read_csv(ROOT_DIR / "input" / "train_with_GKF.csv").fillna("none")
         df = df.loc[df["fold"] == self.hparams.fold]
-        
+
         qtitle = df.loc[:, "question_title"].values
         qbody = df.loc[:, "question_body"].values
         answer = df.loc[:, "answer"].values
         target = df.loc[:, self.target_cols].values
 
-        ds = qDataset(self.hparams ,qtitle, qbody, answer, target)
+        ds = qDataset(self.hparams, qtitle, qbody, answer, target)
 
         return torch.utils.data.DataLoader(
             ds,
-            batch_size=self.hparams.batch_size*2,
+            batch_size=self.hparams.batch_size * 2,
             shuffle=False,
             num_workers=8,
             drop_last=True,
         )
-    
+
     def test_dataloader(self):
         df = pd.read_csv(ROOT_DIR / "input" / "test.csv").fillna("none")
-        
+
         qtitle = df.loc[:, "question_title"].values
         qbody = df.loc[:, "question_body"].values
         answer = df.loc[:, "answer"].values
-        
-        ds = qDataset(self.hparams ,qtitle, qbody, answer)
-        
+
+        ds = qDataset(self.hparams, qtitle, qbody, answer)
+
         return torch.utils.data.DataLoader(
             ds,
-            batch_size=self.hparams.batch_size*2,
+            batch_size=self.hparams.batch_size * 2,
             shuffle=False,
             num_workers=8,
             drop_last=True,
         )
 
+
 if __name__ == "__main__":
-    
+
     parser = ArgumentParser()
-    parser.add_argument("--fold", default=0, type=int, choices=[0,1,2,3,4])
+    parser.add_argument("--fold", default=0, type=int, choices=[0, 1, 2, 3, 4])
     parser.add_argument("--maxlen", default=512, type=int)
     parser.add_argument("--bert_lr", default=1e-5, type=int)
     parser.add_argument("--linear_lr", default=5e-3, type=int)
     parser.add_argument("--bert_dropout", default=0.3, type=float)
-    parser.add_argument("--bert_output_used", default="maxpooled", type=str, choices=["maxpooled", "weighted_sum"])
+    parser.add_argument(
+        "--bert_output_used",
+        default="maxpooled",
+        type=str,
+        choices=["maxpooled", "weighted_sum"],
+    )
     parser.add_argument("--batch_size", default=4, type=int)
     # parser = pl.Trainer.add_argparse_args(parser)
-    parser.add_argument("--gpus", default=1, help="if value is 0 cpu will be used, if string then that gpu device will be used")
+    parser.add_argument(
+        "--gpus",
+        default=1,
+        help="if value is 0 cpu will be used, if string then that gpu device will be used",
+    )
     parser.add_argument("--max_epochs", default=5, type=int)
     parser.add_argument("--accumulate_grad_batches", default=4, type=int)
-    
+
     args = parser.parse_args()
-    
-    args.effective_batch_size = args.batch_size*args.accumulate_grad_batches
+
+    args.effective_batch_size = args.batch_size * args.accumulate_grad_batches
     args.log_every_n_steps = args.accumulate_grad_batches * 5
-    
+
     dm = QuestData(args)
