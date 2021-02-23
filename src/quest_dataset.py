@@ -1,19 +1,26 @@
 import pandas as pd
+import os
+from pathlib import Path
+from argparse import ArgumentParser
+
 import torch
 import transformers
-from CONFIG import path_dict, config_dict
+import pytorch_lightning as pl
+
+
+ROOT_DIR = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 class qDataset(torch.utils.data.Dataset):
     def __init__(
         self,
+        args,
         qtitle,
         qbody,
         answer,
         target=None,
-        path_dict=path_dict,
-        config_dict=config_dict,
     ):
+        self.hparams = args
         self.qtitle = qtitle
         self.qbody = qbody
         self.answer = answer
@@ -21,10 +28,8 @@ class qDataset(torch.utils.data.Dataset):
             self.target = [0] * len(self.qtitle)
         else:
             self.target = target
-        self.tokenizer = transformers.BertTokenizer.from_pretrained(
-            path_dict["TOKENIZER_PATH"]
-        )
-        self.maxlen = config_dict["maxlen"]
+        self.tokenizer = transformers.BertTokenizer.from_pretrained("bert-base-uncased")
+        self.maxlen = self.hparams.maxlen
 
     def __len__(self):
         return len(self.qtitle)
@@ -50,22 +55,6 @@ class qDataset(torch.utils.data.Dataset):
             "target": torch.tensor(self.target[idx], dtype=torch.float),
         }
 
-
-def return_dl(df, split, target_cols, config_dict=config_dict):
-    qtitle = df.loc[:, "question_title"].values
-    qbody = df.loc[:, "question_body"].values
-    answer = df.loc[:, "answer"].values
-    target = df.loc[:, target_cols].values
-
-    ds = qDataset(qtitle, qbody, answer, target)
-
-    return torch.utils.data.DataLoader(
-        ds,
-        batch_size=config_dict["batch_size"],
-        shuffle=split == "train",
-        num_workers=8,
-        drop_last=True,
-    )
 
 target_columns = [
     "question_asker_intent_understanding",
@@ -99,18 +88,97 @@ target_columns = [
     "answer_type_reason_explanation",
     "answer_well_written",
 ]
-def get_dataloaders(
-    fold=0, target_cols=target_columns, path_dict=path_dict, config_dict=config_dict
-):
-    data = pd.read_csv(path_dict["TRAIN_PATH"]).fillna("none")
 
-    df_train = data.loc[data["fold"] != fold]
-    df_valid = data.loc[data["fold"] == fold]
 
-    return (
-        return_dl(df_train, "train", target_cols=target_cols, config_dict=config_dict),
-        return_dl(df_valid, "valid", target_cols=target_cols, config_dict=config_dict),
-    )
+class QuestData(pl.LightningDataModule):
+    def __init__(self, args, target_cols=target_columns):
+        super().__init__()
+        self.hparams = args
+        self.target_cols = target_cols
+
+    def train_dataloader(self):
+        df = pd.read_csv(ROOT_DIR / "input" / "train_with_GKF.csv").fillna("none")
+        df = df.loc[df["fold"] != self.hparams.fold]
+
+        qtitle = df.loc[:, "question_title"].values
+        qbody = df.loc[:, "question_body"].values
+        answer = df.loc[:, "answer"].values
+        target = df.loc[:, self.target_cols].values
+
+        ds = qDataset(self.hparams, qtitle, qbody, answer, target)
+
+        return torch.utils.data.DataLoader(
+            ds,
+            batch_size=self.hparams.batch_size,
+            shuffle=True,
+            num_workers=8,
+            drop_last=True,
+        )
+
+    def val_dataloader(self):
+        df = pd.read_csv(ROOT_DIR / "input" / "train_with_GKF.csv").fillna("none")
+        df = df.loc[df["fold"] == self.hparams.fold]
+
+        qtitle = df.loc[:, "question_title"].values
+        qbody = df.loc[:, "question_body"].values
+        answer = df.loc[:, "answer"].values
+        target = df.loc[:, self.target_cols].values
+
+        ds = qDataset(self.hparams, qtitle, qbody, answer, target)
+
+        return torch.utils.data.DataLoader(
+            ds,
+            batch_size=self.hparams.batch_size * 2,
+            shuffle=False,
+            num_workers=8,
+            drop_last=True,
+        )
+
+    def test_dataloader(self):
+        df = pd.read_csv(ROOT_DIR / "input" / "test.csv").fillna("none")
+
+        qtitle = df.loc[:, "question_title"].values
+        qbody = df.loc[:, "question_body"].values
+        answer = df.loc[:, "answer"].values
+
+        ds = qDataset(self.hparams, qtitle, qbody, answer)
+
+        return torch.utils.data.DataLoader(
+            ds,
+            batch_size=self.hparams.batch_size * 2,
+            shuffle=False,
+            num_workers=8,
+            drop_last=True,
+        )
+
 
 if __name__ == "__main__":
-    train_dl, valid_dl = get_dataloaders(fold=0, target_cols=target_columns)
+
+    parser = ArgumentParser()
+    parser.add_argument("--fold", default=0, type=int, choices=[0, 1, 2, 3, 4])
+    parser.add_argument("--maxlen", default=512, type=int)
+    parser.add_argument("--bert_lr", default=1e-5, type=int)
+    parser.add_argument("--linear_lr", default=5e-3, type=int)
+    parser.add_argument("--bert_dropout", default=0.3, type=float)
+    parser.add_argument(
+        "--bert_output_used",
+        default="maxpooled",
+        type=str,
+        choices=["maxpooled", "weighted_sum"],
+    )
+    parser.add_argument("--batch_size", default=4, type=int)
+    # parser = pl.Trainer.add_argparse_args(parser)
+    parser.add_argument(
+        "--gpus",
+        default=1,
+        help="if value is 0 cpu will be used, if string then that gpu device will be used",
+    )
+    parser.add_argument("--max_epochs", default=5, type=int)
+    parser.add_argument("--accumulate_grad_batches", default=4, type=int)
+
+    args = parser.parse_args()
+
+    args.effective_batch_size = args.batch_size * args.accumulate_grad_batches
+    args.log_every_n_steps = args.accumulate_grad_batches * 5
+
+    dm = QuestData(args)

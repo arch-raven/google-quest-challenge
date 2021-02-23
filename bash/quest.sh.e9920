@@ -1,0 +1,271 @@
+Global seed set to 420
+GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+wandb: Currently logged in as: professor (use `wandb login --relogin` to force relogin)
+wandb: wandb version 0.10.20 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.10.19
+wandb: Syncing run dauntless-bush-37
+wandb: ⭐️ View project at https://wandb.ai/professor/google-quest-challenge-kaggle
+wandb: 🚀 View run at https://wandb.ai/professor/google-quest-challenge-kaggle/runs/twoox954
+wandb: Run data is saved locally in /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_211820-twoox954
+wandb: Run `wandb offline` to turn off syncing.
+
+  | Name         | Type      | Params
+-------------------------------------------
+0 | bert         | BertModel | 109 M 
+1 | bert_dropout | Dropout   | 0     
+2 | linear       | Linear    | 23.1 K
+-------------------------------------------
+109 M     Trainable params
+0         Non-trainable params
+109 M     Total params
+438.021   Total estimated model params size (MB)
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/scipy/stats/stats.py:4264: SpearmanRConstantInputWarning: An input array is constant; the correlation coefficent is not defined.
+  warnings.warn(SpearmanRConstantInputWarning())
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/torch/optim/lr_scheduler.py:200: UserWarning: Please also save or load the state of the optimzer when saving or loading the scheduler.
+  warnings.warn(SAVE_STATE_WARNING, UserWarning)
+wandb: Waiting for W&B process to finish, PID 2105
+wandb: Program ended successfully.
+wandb: - 1.35MB of 1.35MB uploaded (0.00MB deduped)wandb: \ 1.78MB of 1.78MB uploaded (0.00MB deduped)wandb: | 1.78MB of 1.78MB uploaded (0.00MB deduped)wandb:                                                                                
+wandb: Find user logs for this run at: /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_211820-twoox954/logs/debug.log
+wandb: Find internal logs for this run at: /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_211820-twoox954/logs/debug-internal.log
+wandb: Run summary:
+wandb:    train_loss_step 0.34142
+wandb:              epoch 4
+wandb:           _runtime 1281
+wandb:         _timestamp 1614096581
+wandb:              _step 1519
+wandb:   train_loss_epoch 0.35908
+wandb:         valid_loss 0.37456
+wandb:       val_spearman 0.38335
+wandb: Run history:
+wandb:    train_loss_step ▇▄▄▄▆▄█▅▅▃▅▄▄▃▄▄▂▂▃▃▃▄▃▃▄▃▅▂▄▂▃▃▃▃▁▂▂▃▃▂
+wandb:              epoch ▁▁▁▁▁▁▁▁▃▃▃▃▃▃▃▃▅▅▅▅▅▅▅▅▆▆▆▆▆▆▆▆████████
+wandb:           _runtime ▁▁▁▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇▇███
+wandb:         _timestamp ▁▁▁▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇▇███
+wandb:              _step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:   train_loss_epoch █▄▂▁▁
+wandb:         valid_loss █▂▁▁▁
+wandb:       val_spearman ▁▆▇██
+wandb: 
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 1 other file(s)
+wandb: 
+wandb: Synced dauntless-bush-37: https://wandb.ai/professor/google-quest-challenge-kaggle/runs/twoox954
+Global seed set to 420
+GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+wandb: Currently logged in as: professor (use `wandb login --relogin` to force relogin)
+wandb: wandb version 0.10.20 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.10.19
+wandb: Syncing run fallen-serenity-38
+wandb: ⭐️ View project at https://wandb.ai/professor/google-quest-challenge-kaggle
+wandb: 🚀 View run at https://wandb.ai/professor/google-quest-challenge-kaggle/runs/1nikqgwj
+wandb: Run data is saved locally in /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_214013-1nikqgwj
+wandb: Run `wandb offline` to turn off syncing.
+
+  | Name         | Type      | Params
+-------------------------------------------
+0 | bert         | BertModel | 109 M 
+1 | bert_dropout | Dropout   | 0     
+2 | linear       | Linear    | 23.1 K
+-------------------------------------------
+109 M     Trainable params
+0         Non-trainable params
+109 M     Total params
+438.021   Total estimated model params size (MB)
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/scipy/stats/stats.py:4264: SpearmanRConstantInputWarning: An input array is constant; the correlation coefficent is not defined.
+  warnings.warn(SpearmanRConstantInputWarning())
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/torch/optim/lr_scheduler.py:200: UserWarning: Please also save or load the state of the optimzer when saving or loading the scheduler.
+  warnings.warn(SAVE_STATE_WARNING, UserWarning)
+wandb: Waiting for W&B process to finish, PID 2796
+wandb: Program ended successfully.
+wandb: - 1.35MB of 1.35MB uploaded (0.00MB deduped)wandb: \ 1.78MB of 1.78MB uploaded (0.00MB deduped)wandb: | 1.78MB of 1.78MB uploaded (0.00MB deduped)wandb:                                                                                
+wandb: Find user logs for this run at: /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_214013-1nikqgwj/logs/debug.log
+wandb: Find internal logs for this run at: /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_214013-1nikqgwj/logs/debug-internal.log
+wandb: Run summary:
+wandb:    train_loss_step 0.34416
+wandb:              epoch 4
+wandb:           _runtime 1271
+wandb:         _timestamp 1614097884
+wandb:              _step 1519
+wandb:   train_loss_epoch 0.35896
+wandb:         valid_loss 0.373
+wandb:       val_spearman 0.36682
+wandb: Run history:
+wandb:    train_loss_step ▅█▄▅▄▆▆▄▃▃▁▂▄▃▃▂▄▂▅▄▂▁▂▃▂▁▁▂▁▁▂▃▂▂▃▁▂▃▃▁
+wandb:              epoch ▁▁▁▁▁▁▁▁▃▃▃▃▃▃▃▃▅▅▅▅▅▅▅▅▆▆▆▆▆▆▆▆████████
+wandb:           _runtime ▁▁▁▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▆▆▆▆▆▇▇▇▇▇███
+wandb:         _timestamp ▁▁▁▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▆▆▆▆▆▇▇▇▇▇███
+wandb:              _step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:   train_loss_epoch █▄▂▁▁
+wandb:         valid_loss █▂▁▁▁
+wandb:       val_spearman ▁▆▇██
+wandb: 
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 1 other file(s)
+wandb: 
+wandb: Synced fallen-serenity-38: https://wandb.ai/professor/google-quest-challenge-kaggle/runs/1nikqgwj
+Global seed set to 420
+GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+wandb: Currently logged in as: professor (use `wandb login --relogin` to force relogin)
+wandb: wandb version 0.10.20 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.10.19
+wandb: Syncing run sparkling-sponge-39
+wandb: ⭐️ View project at https://wandb.ai/professor/google-quest-challenge-kaggle
+wandb: 🚀 View run at https://wandb.ai/professor/google-quest-challenge-kaggle/runs/1q804lvf
+wandb: Run data is saved locally in /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_220156-1q804lvf
+wandb: Run `wandb offline` to turn off syncing.
+
+  | Name         | Type      | Params
+-------------------------------------------
+0 | bert         | BertModel | 109 M 
+1 | bert_dropout | Dropout   | 0     
+2 | linear       | Linear    | 23.1 K
+-------------------------------------------
+109 M     Trainable params
+0         Non-trainable params
+109 M     Total params
+438.021   Total estimated model params size (MB)
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/scipy/stats/stats.py:4264: SpearmanRConstantInputWarning: An input array is constant; the correlation coefficent is not defined.
+  warnings.warn(SpearmanRConstantInputWarning())
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/torch/optim/lr_scheduler.py:200: UserWarning: Please also save or load the state of the optimzer when saving or loading the scheduler.
+  warnings.warn(SAVE_STATE_WARNING, UserWarning)
+wandb: Waiting for W&B process to finish, PID 3469
+wandb: Program ended successfully.
+wandb: - 1.35MB of 1.35MB uploaded (0.00MB deduped)wandb: \ 1.78MB of 1.78MB uploaded (0.00MB deduped)wandb: | 1.78MB of 1.78MB uploaded (0.00MB deduped)wandb:                                                                                
+wandb: Find user logs for this run at: /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_220156-1q804lvf/logs/debug.log
+wandb: Find internal logs for this run at: /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_220156-1q804lvf/logs/debug-internal.log
+wandb: Run summary:
+wandb:    train_loss_step 0.33594
+wandb:              epoch 4
+wandb:           _runtime 1277
+wandb:         _timestamp 1614099193
+wandb:              _step 1519
+wandb:   train_loss_epoch 0.36095
+wandb:         valid_loss 0.36914
+wandb:       val_spearman 0.38442
+wandb: Run history:
+wandb:    train_loss_step ▇▆█▄▅▇▆▇▆▃▂▄▄▃▄▃▂▃▃▄▁▄▄▃▂▄▂▂▃▂▅▁▂▄▃▃▄▂▂▂
+wandb:              epoch ▁▁▁▁▁▁▁▁▃▃▃▃▃▃▃▃▅▅▅▅▅▅▅▅▆▆▆▆▆▆▆▆████████
+wandb:           _runtime ▁▁▁▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇▇███
+wandb:         _timestamp ▁▁▁▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇▇███
+wandb:              _step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:   train_loss_epoch █▄▂▂▁
+wandb:         valid_loss █▃▁▁▁
+wandb:       val_spearman ▁▆███
+wandb: 
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 1 other file(s)
+wandb: 
+wandb: Synced sparkling-sponge-39: https://wandb.ai/professor/google-quest-challenge-kaggle/runs/1q804lvf
+Global seed set to 420
+GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+wandb: Currently logged in as: professor (use `wandb login --relogin` to force relogin)
+wandb: wandb version 0.10.20 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.10.19
+wandb: Syncing run charmed-silence-40
+wandb: ⭐️ View project at https://wandb.ai/professor/google-quest-challenge-kaggle
+wandb: 🚀 View run at https://wandb.ai/professor/google-quest-challenge-kaggle/runs/uw5cwhny
+wandb: Run data is saved locally in /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_222345-uw5cwhny
+wandb: Run `wandb offline` to turn off syncing.
+
+  | Name         | Type      | Params
+-------------------------------------------
+0 | bert         | BertModel | 109 M 
+1 | bert_dropout | Dropout   | 0     
+2 | linear       | Linear    | 23.1 K
+-------------------------------------------
+109 M     Trainable params
+0         Non-trainable params
+109 M     Total params
+438.021   Total estimated model params size (MB)
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/scipy/stats/stats.py:4264: SpearmanRConstantInputWarning: An input array is constant; the correlation coefficent is not defined.
+  warnings.warn(SpearmanRConstantInputWarning())
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/torch/optim/lr_scheduler.py:200: UserWarning: Please also save or load the state of the optimzer when saving or loading the scheduler.
+  warnings.warn(SAVE_STATE_WARNING, UserWarning)
+wandb: Waiting for W&B process to finish, PID 4434
+wandb: Program ended successfully.
+wandb: - 1.35MB of 1.35MB uploaded (0.00MB deduped)wandb: \ 1.35MB of 1.78MB uploaded (0.00MB deduped)wandb: | 1.78MB of 1.78MB uploaded (0.00MB deduped)wandb:                                                                                
+wandb: Find user logs for this run at: /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_222345-uw5cwhny/logs/debug.log
+wandb: Find internal logs for this run at: /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_222345-uw5cwhny/logs/debug-internal.log
+wandb: Run summary:
+wandb:    train_loss_step 0.38021
+wandb:              epoch 4
+wandb:           _runtime 1271
+wandb:         _timestamp 1614100496
+wandb:              _step 1519
+wandb:   train_loss_epoch 0.36109
+wandb:         valid_loss 0.37012
+wandb:       val_spearman 0.3769
+wandb: Run history:
+wandb:    train_loss_step ▅▅▆█▅▅▆▆▄▃▃▄▃▃▅▃▄▄▄▂▂▂▃▂▁▂▂▁▂▂▁▂▃▃▂▂▂▂▂▃
+wandb:              epoch ▁▁▁▁▁▁▁▁▃▃▃▃▃▃▃▃▅▅▅▅▅▅▅▅▆▆▆▆▆▆▆▆████████
+wandb:           _runtime ▁▁▁▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇▇███
+wandb:         _timestamp ▁▁▁▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇▇███
+wandb:              _step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:   train_loss_epoch █▄▂▁▁
+wandb:         valid_loss █▂▁▁▁
+wandb:       val_spearman ▁▆▇██
+wandb: 
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 1 other file(s)
+wandb: 
+wandb: Synced charmed-silence-40: https://wandb.ai/professor/google-quest-challenge-kaggle/runs/uw5cwhny
+Global seed set to 420
+GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+wandb: Currently logged in as: professor (use `wandb login --relogin` to force relogin)
+wandb: wandb version 0.10.20 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.10.19
+wandb: Syncing run hopeful-shadow-41
+wandb: ⭐️ View project at https://wandb.ai/professor/google-quest-challenge-kaggle
+wandb: 🚀 View run at https://wandb.ai/professor/google-quest-challenge-kaggle/runs/1mdgitk4
+wandb: Run data is saved locally in /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_224527-1mdgitk4
+wandb: Run `wandb offline` to turn off syncing.
+
+  | Name         | Type      | Params
+-------------------------------------------
+0 | bert         | BertModel | 109 M 
+1 | bert_dropout | Dropout   | 0     
+2 | linear       | Linear    | 23.1 K
+-------------------------------------------
+109 M     Trainable params
+0         Non-trainable params
+109 M     Total params
+438.021   Total estimated model params size (MB)
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/scipy/stats/stats.py:4264: SpearmanRConstantInputWarning: An input array is constant; the correlation coefficent is not defined.
+  warnings.warn(SpearmanRConstantInputWarning())
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/torch/optim/lr_scheduler.py:200: UserWarning: Please also save or load the state of the optimzer when saving or loading the scheduler.
+  warnings.warn(SAVE_STATE_WARNING, UserWarning)
+wandb: Waiting for W&B process to finish, PID 5114
+wandb: Program ended successfully.
+wandb: - 1.35MB of 1.35MB uploaded (0.00MB deduped)wandb: \ 1.39MB of 1.78MB uploaded (0.00MB deduped)wandb: | 1.78MB of 1.78MB uploaded (0.00MB deduped)wandb:                                                                                
+wandb: Find user logs for this run at: /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_224527-1mdgitk4/logs/debug.log
+wandb: Find internal logs for this run at: /home/ug2019/cer/19034002/google-quest-challenge/wandb/run-20210223_224527-1mdgitk4/logs/debug-internal.log
+wandb: Run summary:
+wandb:    train_loss_step 0.3476
+wandb:              epoch 4
+wandb:           _runtime 1274
+wandb:         _timestamp 1614101801
+wandb:              _step 1519
+wandb:   train_loss_epoch 0.36097
+wandb:         valid_loss 0.37241
+wandb:       val_spearman 0.37132
+wandb: Run history:
+wandb:    train_loss_step ▅▇▆▅▇▇▇▇█▄▄▅▂▅▃▃▄▅▃▄▆▃▂▅▃▄▄▂▃▂▆▁▂▃▃▃▃▅▃▂
+wandb:              epoch ▁▁▁▁▁▁▁▁▃▃▃▃▃▃▃▃▅▅▅▅▅▅▅▅▆▆▆▆▆▆▆▆████████
+wandb:           _runtime ▁▁▁▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇▇███
+wandb:         _timestamp ▁▁▁▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇▇███
+wandb:              _step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:   train_loss_epoch █▄▂▁▁
+wandb:         valid_loss █▂▁▁▁
+wandb:       val_spearman ▁▆▇██
+wandb: 
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 1 other file(s)
+wandb: 
+wandb: Synced hopeful-shadow-41: https://wandb.ai/professor/google-quest-challenge-kaggle/runs/1mdgitk4
+/var/spool/pbs/mom_priv/jobs/9920.master.SC: line 13: deactivate: No such file or directory
