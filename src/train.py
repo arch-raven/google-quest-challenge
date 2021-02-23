@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     args.effective_batch_size = args.batch_size * args.accumulate_grad_batches
     args.log_every_n_steps = args.accumulate_grad_batches * 5
-
+    
     model = QuestModel(args)
     data = QuestData(args)
 
@@ -85,3 +85,6 @@ if __name__ == "__main__":
             early_stop_callback,
         ],
     )
+
+    print(f"Training model_name={args.model_name} on fold={args.fold} for max_apochs={args.max_epochs} with and effective batch_size of effective_batch_size={args.effective_batch_size}")
+    trainer.fit(model, data)
