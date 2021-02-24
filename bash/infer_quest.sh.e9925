@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "src/predict.py", line 56, in <module>
+    model = QuestModel.load_from_checkpoint(f"models/{checkpoint}")
+  File "/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/pytorch_lightning/core/saving.py", line 156, in load_from_checkpoint
+    model = cls._load_model_state(checkpoint, strict=strict, **kwargs)
+  File "/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/pytorch_lightning/core/saving.py", line 198, in _load_model_state
+    model = cls(**_cls_kwargs)
+  File "/home/ug2019/cer/19034002/google-quest-challenge/src/model.py", line 16, in __init__
+    self.bert_dropout = nn.Dropout(args.bert_dropout)
+AttributeError: 'dict' object has no attribute 'bert_dropout'
+/var/spool/pbs/mom_priv/jobs/9925.master.SC: line 9: deactivate: No such file or directory
