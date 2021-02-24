@@ -26,7 +26,7 @@ def predict_and_save(args, model, dataloader):
     y_pred = torch.sigmoid(torch.cat(outputs)).to("cpu").detach().numpy()
 
     submission_df = pd.read_csv("../output/sample_submission.csv")
-    submission_df.loc[:,data.target_cols] = y_pred
+    submission_df.loc[:, data.target_cols] = y_pred
 
     if not args.output_filename.endswith(".csv"):
         args.output_filename = f"{args.output_filename}.csv"
@@ -37,12 +37,15 @@ def predict_and_save(args, model, dataloader):
     )
     print(f"predictions saved in file {args.output_filename}")
 
+
 if __name__ == "__main__":
     pl.seed_everything(420)
-    
+
     parser = ArgumentParser()
-    parser.add_argument("--ckpt_folder", default="models",type=str)
-    parser.add_argument("--output_filename", default="none",type=str, help="regex pattern or filename")
+    parser.add_argument("--ckpt_folder", default="models", type=str)
+    parser.add_argument(
+        "--output_filename", default="none", type=str, help="regex pattern or filename"
+    )
     parser.add_argument("--fold", default=0, type=int, choices=[0, 1, 2, 3, 4])
     parser.add_argument(
         "--gpus",
@@ -72,7 +75,8 @@ if __name__ == "__main__":
 
     for checkpoint in [f for f in os.listdir(args.ckpt_folder) if f.endswith(".ckpt")]:
         args.output_filename = f"{checkpoint[:-5]}.csv"
-        if not os.path.exists(args.output_filename):
+        if not os.path.exists(f"outputs/{args.output_filename}"):
+            print(f"Loading model from checkpoint: {args.output_filename}")
             model.load_from_checkpoint(f"models/{checkpoint}")
             predict_and_save(args, model, test_dataloader)
         else:
