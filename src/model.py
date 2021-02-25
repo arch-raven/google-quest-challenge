@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
 import pytorch_lightning as pl
@@ -7,29 +8,33 @@ import transformers
 from transformers import AdamW, get_cosine_schedule_with_warmup
 
 from scipy.stats import spearmanr
+from quest_dataset import TARGET_COLUMNS
 
-
-class QuestModel(pl.LightningModule):
-    def __init__(self, args, **kwargs):
+class MainModel(nn.Module):
+    def __init__(self, args=None, **kwargs):
         super().__init__()
         self.bert = transformers.BertModel.from_pretrained("bert-base-uncased")
-        self.bert_dropout = nn.Dropout(args.bert_dropout)
+        self.bert_dropout = nn.Dropout(args.bert_dropout if (args is not None) else 0.3)
         self.linear = nn.Linear(768, 30)
-
-        self.save_hyperparameters(args)
-
-    @staticmethod
-    def loss(logits, targets):
-        return nn.BCEWithLogitsLoss()(logits, targets)
-
+    
     def forward(self, ids_seq, attn_masks, token_type_ids):
-
         bert_out = self.bert(
             ids_seq, attention_mask=attn_masks, token_type_ids=token_type_ids
         )
         # using maxpooled output
         max_out = self.bert_dropout(bert_out[1])
         return self.linear(max_out)
+    
+class QuestModel(pl.LightningModule):
+    def __init__(self, args, **kwargs):
+        super().__init__()
+
+        self.save_hyperparameters(args)
+        self.model = MainModel(self.hparams)
+
+    @staticmethod
+    def loss(logits, targets):
+        return nn.BCEWithLogitsLoss()(logits, targets)
 
     def shared_step(self, batch):
         ids_seq, attn_masks, token_type_ids, target = (
@@ -38,7 +43,7 @@ class QuestModel(pl.LightningModule):
             batch["token_type_ids"],
             batch["target"],
         )
-        logits = self(ids_seq, attn_masks, token_type_ids)
+        logits = self.model(ids_seq, attn_masks, token_type_ids)
         loss = self.loss(logits, target)
         return logits, loss
 
@@ -60,11 +65,21 @@ class QuestModel(pl.LightningModule):
             logger=True,
         )
         return {"valid_loss": loss, "logits": logits, "true_preds": batch["target"]}
+    
+    def test_step(self, batch, batch_idx):
+        ids_seq, attn_masks, token_type_ids = (
+            batch["ids_seq"],
+            batch["attn_masks"],
+            batch["token_type_ids"],
+        )
+
+        logits = self.model(ids_seq, attn_masks, token_type_ids)
+        return logits
 
     def configure_optimizers(self):
         grouped_parameters = [
-            {"params": self.bert.parameters(), "lr": self.hparams.bert_lr},
-            {"params": self.linear.parameters(), "lr": self.hparams.linear_lr},
+            {"params": self.model.bert.parameters(), "lr": self.hparams.bert_lr},
+            {"params": self.model.linear.parameters(), "lr": self.hparams.linear_lr},
         ]
         optim = AdamW(grouped_parameters, lr=self.hparams.bert_lr)
         # 4863 is total number of samples in train split
@@ -93,7 +108,19 @@ class QuestModel(pl.LightningModule):
 
         spearman_corr = self.spearman_metric(y_true, y_pred)
         self.log("val_spearman", spearman_corr, logger=True)
+    
+    def test_epoch_end(self, test_step_outputs):
+        test_outputs = torch.sigmoid(torch.cat(test_step_outputs)).to("cpu").detach().numpy()
 
+        submission_df = pd.read_csv("../output/sample_submission.csv")
+        submission_df.loc[:, TARGET_COLUMNS] = test_outputs
+
+        submission_df.to_csv(
+            "../output/submission.csv",
+            index=False,
+        )
+        print(f"predictions saved in file ../output/submission.csv")
+    
     @staticmethod
     def spearman_metric(y_true, y_pred, return_scores=False):
         corr = [

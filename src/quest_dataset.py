@@ -56,7 +56,7 @@ class qDataset(torch.utils.data.Dataset):
         }
 
 
-target_columns = [
+TARGET_COLUMNS = [
     "question_asker_intent_understanding",
     "question_body_critical",
     "question_conversational",
@@ -91,7 +91,7 @@ target_columns = [
 
 
 class QuestData(pl.LightningDataModule):
-    def __init__(self, args, target_cols=target_columns):
+    def __init__(self, args, target_cols=TARGET_COLUMNS):
         super().__init__()
         self.hparams = args
         self.target_cols = target_cols
@@ -148,7 +148,7 @@ class QuestData(pl.LightningDataModule):
             batch_size=self.hparams.batch_size * 2,
             shuffle=False,
             num_workers=8,
-            drop_last=True,
+            drop_last=False,
         )
 
 
