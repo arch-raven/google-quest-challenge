@@ -6,3 +6,5 @@ google-quest-challenge-kaggle/
 *.onnx
 models/
 src/extra.py
+questkaggle
+questNB-outputs/

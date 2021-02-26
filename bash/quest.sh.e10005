@@ -1,0 +1,71 @@
+Global seed set to 420
+GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+
+  | Name  | Type      | Params
+------------------------------------
+0 | model | MainModel | 109 M 
+------------------------------------
+109 M     Trainable params
+0         Non-trainable params
+109 M     Total params
+438.021   Total estimated model params size (MB)
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/scipy/stats/stats.py:4264: SpearmanRConstantInputWarning: An input array is constant; the correlation coefficent is not defined.
+  warnings.warn(SpearmanRConstantInputWarning())
+Global seed set to 420
+GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+
+  | Name  | Type      | Params
+------------------------------------
+0 | model | MainModel | 109 M 
+------------------------------------
+109 M     Trainable params
+0         Non-trainable params
+109 M     Total params
+438.021   Total estimated model params size (MB)
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/scipy/stats/stats.py:4264: SpearmanRConstantInputWarning: An input array is constant; the correlation coefficent is not defined.
+  warnings.warn(SpearmanRConstantInputWarning())
+Global seed set to 420
+GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+
+  | Name  | Type      | Params
+------------------------------------
+0 | model | MainModel | 109 M 
+------------------------------------
+109 M     Trainable params
+0         Non-trainable params
+109 M     Total params
+438.021   Total estimated model params size (MB)
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/scipy/stats/stats.py:4264: SpearmanRConstantInputWarning: An input array is constant; the correlation coefficent is not defined.
+  warnings.warn(SpearmanRConstantInputWarning())
+Global seed set to 420
+GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+
+  | Name  | Type      | Params
+------------------------------------
+0 | model | MainModel | 109 M 
+------------------------------------
+109 M     Trainable params
+0         Non-trainable params
+109 M     Total params
+438.021   Total estimated model params size (MB)
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/scipy/stats/stats.py:4264: SpearmanRConstantInputWarning: An input array is constant; the correlation coefficent is not defined.
+  warnings.warn(SpearmanRConstantInputWarning())
+Global seed set to 420
+GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+
+  | Name  | Type      | Params
+------------------------------------
+0 | model | MainModel | 109 M 
+------------------------------------
+109 M     Trainable params
+0         Non-trainable params
+109 M     Total params
+438.021   Total estimated model params size (MB)
+/home/ug2019/cer/19034002/.conda/envs/torchenv/lib/python3.8/site-packages/scipy/stats/stats.py:4264: SpearmanRConstantInputWarning: An input array is constant; the correlation coefficent is not defined.
+  warnings.warn(SpearmanRConstantInputWarning())
+/var/spool/pbs/mom_priv/jobs/10005.master.SC: line 13: deactivate: No such file or directory

@@ -35,7 +35,7 @@ class ToggleBertBaseTraining(pl.Callback):
 
 class SaveModelWeights(pl.Callback):
     def on_validation_end(self, trainer, pl_module):
-        os.makedirs("../models/", exist_ok=True)
+        os.makedirs("models/", exist_ok=True)
         print("-" * 100)
         print("SaveModelWeight Callback working.............")
         print(f"trainer.current_epoch: {trainer.current_epoch}")
@@ -43,7 +43,7 @@ class SaveModelWeights(pl.Callback):
             print(
                 f"val_spearman: {trainer.logger_connector.logged_metrics['val_spearman']}"
             )
-            m_filepath = f"../models/{pl_module.hparams.model_name}-epoch-{trainer.current_epoch}-val_spearman{trainer.logger_connector.logged_metrics['val_spearman'].item():.5f}-fold-{pl_module.hparams.fold}.pt"
+            m_filepath = f"models/{pl_module.hparams.model_name}-epoch-{trainer.current_epoch}-val_spearman{trainer.logger_connector.logged_metrics['val_spearman'].item():.5f}-fold-{pl_module.hparams.fold}.pt"
             torch.save(pl_module.model.state_dict(), m_filepath)
             print(f"saved current model weights in file: {m_filepath}")
         print("-" * 100)
