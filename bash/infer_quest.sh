@@ -5,5 +5,5 @@ module load cuda
 module load anaconda/3
 source activate torchenv
 cd google-quest-challenge/
-python src/predict.py
+python src/predict.py "models/*.pt"
 source deactivate

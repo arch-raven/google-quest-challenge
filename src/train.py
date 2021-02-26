@@ -16,6 +16,8 @@ from model import QuestModel
 
 class ToggleBertBaseTraining(pl.Callback):
     def on_train_epoch_start(self, trainer, pl_module):
+        print("-" * 100)
+        print("ToggleBertBaseTraining Callback working.............")
         if trainer.current_epoch == 0:
             print(
                 f"current_epoch is: {trainer.current_epoch} and freezing BERT layer's parameters"
@@ -28,24 +30,48 @@ class ToggleBertBaseTraining(pl.Callback):
             )
             for p in pl_module.model.bert.parameters():
                 p.requires_grad = True
+        print("-" * 100)
+
 
 class SaveModelWeights(pl.Callback):
-    def on_valid_epoch_end(self, trainer, pl_module):
+    def on_validation_end(self, trainer, pl_module):
+        os.makedirs("../models/", exist_ok=True)
+        print("-" * 100)
+        print("SaveModelWeight Callback working.............")
+        print(f"trainer.current_epoch: {trainer.current_epoch}")
         if trainer.current_epoch >= 2:
-            m_filepath = f"../models/{pl_module.hparams.model_name}-epoch-{trainer.current_epoch:02d}-val_spearman{trainer.logger_connector.logged_metrics['val_spearman'].item():.5f}-fold-{pl_module.hparams.fold}.pt"
+            print(
+                f"val_spearman: {trainer.logger_connector.logged_metrics['val_spearman']}"
+            )
+            m_filepath = f"../models/{pl_module.hparams.model_name}-epoch-{trainer.current_epoch}-val_spearman{trainer.logger_connector.logged_metrics['val_spearman'].item():.5f}-fold-{pl_module.hparams.fold}.pt"
             torch.save(pl_module.model.state_dict(), m_filepath)
             print(f"saved current model weights in file: {m_filepath}")
+        print("-" * 100)
+
 
 if __name__ == "__main__":
     pl.seed_everything(420)
 
     parser = ArgumentParser()
-    parser.add_argument("--fold", default=0, type=int, choices=[0, 1, 2, 3, 4])
+
+    # trainer related arguments
     parser.add_argument(
         "--gpus",
         default=1,
         help="if value is 0 cpu will be used, if string then that gpu device will be used",
     )
+    parser.add_argument("--checkpoint_callback", action="store_true")
+    parser.add_argument("--logger", action="store_true")
+    parser.add_argument("--max_epochs", default=5, type=int)
+    parser.add_argument("--progress_bar_refresh_rate", default=1, type=int)
+    parser.add_argument("--accumulate_grad_batches", default=2, type=int)
+    parser.add_argument("--model_name", default="quest", type=str)
+
+    # data related arguments
+    parser.add_argument("--batch_size", default=8, type=int)
+    parser.add_argument("--fold", default=0, type=int, choices=[0, 1, 2, 3, 4])
+
+    # model related arguments
     parser.add_argument("--maxlen", default=512, type=int)
     parser.add_argument("--bert_lr", default=1e-5, type=int)
     parser.add_argument("--linear_lr", default=5e-3, type=int)
@@ -56,10 +82,6 @@ if __name__ == "__main__":
         type=str,
         choices=["maxpooled", "weighted_sum"],
     )
-    parser.add_argument("--batch_size", default=8, type=int)
-    parser.add_argument("--max_epochs", default=5, type=int)
-    parser.add_argument("--accumulate_grad_batches", default=2, type=int)
-    parser.add_argument("--model_name", default="quest", type=str)
     # parser = pl.Trainer.add_argparse_args(parser)
     args = parser.parse_args()
 
@@ -69,9 +91,10 @@ if __name__ == "__main__":
     pl_model = QuestModel(args)
     data = QuestData(args)
 
-    # args.logger = WandbLogger(
-    #     project="google-quest-challenge-kaggle", group=str(args.fold)
-    # )
+    if args.logger:
+        args.logger = WandbLogger(
+            project="google-quest-challenge-kaggle", group=str(args.fold)
+        )
 
     early_stop_callback = EarlyStopping(
         monitor="val_spearman", min_delta=0.0000, patience=2, verbose=False, mode="max"
