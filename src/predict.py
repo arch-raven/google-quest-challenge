@@ -56,4 +56,5 @@ if __name__ == "__main__":
 
     pl_model.model.load_state_dict(torch.load(args.path_to_ckpt))
 
+    trainer = pl.Trainer.from_argparse_args(args)
     trainer.test(pl_model, data.test_dataloader())
